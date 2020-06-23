@@ -79,6 +79,9 @@ class Cover:
                     if regular_path not in fn:
                         continue
 
+                    if os.path.splitext(fn)[-1] != ".py":
+                        continue
+
                     with open(fn, 'r', encoding="UTF8") as f:
                         lines = f.readlines()
                         if lines:

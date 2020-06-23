@@ -64,6 +64,8 @@ class Georeum:
 
         # 2. searh py file at target_directory & select target test file
         test_file_list = Georeum.search_py_file(self.test_directory)
+        # 2.1 Select only files with name test_*
+        test_file_list = [testfile for testfile in test_file_list if os.path.basename(testfile).find("test") != -1]
         covered_list = []
         for test_file in test_file_list:
             # 3. get coverage for each file
