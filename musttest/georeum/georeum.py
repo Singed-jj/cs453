@@ -47,7 +47,7 @@ class Georeum:
                         Georeum.search_py_file(full_filename))
                 else:
                     ext = os.path.splitext(full_filename)[-1]
-                    if ext == '.py':
+                    if ext == '.py' and 'test' in filename.lower() :
                         target_file_list.append(full_filename)
         except PermissionError:
             pass
@@ -67,6 +67,9 @@ class Georeum:
         covered_list = []
         for test_file in test_file_list:
             # 3. get coverage for each file
+            from termcolor import cprint
+            cprint(unittest_formatter(test_file, self.root_directory), 'cyan')
+
             is_unittest = False if unittest_formatter(test_file, self.root_directory)[-1] == "." else True
             if not is_unittest:
                 covered = Cover.get_coverage(

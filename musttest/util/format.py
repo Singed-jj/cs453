@@ -24,4 +24,7 @@ def unittest_formatter(test_file_path: str, root_path: str):
                 break
             line = test.readline()
     test_file_rel_path = test_file_rel_path.split(".py")[0] + "/" + module_name
-    return test_file_rel_path.replace("/", ".")
+    res = test_file_rel_path.replace("/", ".")
+    if res[0] == ".":
+        res = res[1:]
+    return res
