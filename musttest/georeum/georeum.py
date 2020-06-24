@@ -23,6 +23,7 @@ class Georeum:
         :param rel_cache_directory: Relative path of cache directory that Georeum uses. Default is \"root_directory\"/.cache
         """
         self.root_directory = root_directory
+        # self.root_directory = "/Users/fovjfozk/.pyenv/versions/3.7.1/envs/pytorch/lib/python3.7/site-packages/Flask-2.0.0.dev0-py3.7.egg/flask/"
         self.test_directory = test_directory
         self.cache_directory = os.path.join(
             root_directory, rel_cache_directory)
@@ -70,10 +71,9 @@ class Georeum:
         for test_file in test_file_list:
             # 3. get coverage for each file
             from termcolor import cprint
-            cprint(unittest_formatter(test_file, self.root_directory), 'cyan')
 
             is_unittest = False if unittest_formatter(test_file, self.root_directory)[-1] == "." else True
-            if not is_unittest:
+            if True or not is_unittest:
                 covered = Cover.get_coverage(
                     args=['pytest', test_file], root_path=self.root_directory, module_use=True)
             else:
@@ -119,8 +119,11 @@ class Georeum:
         # TODO: this does not covers the case where modified lines are at the edge of the coverage
         diff_report = self.manager.analyze()
         selected_tests = []
+        print(diff_report)
         for cover_object in cover_object_list:
+            # print(cover_object.get_file_path())
             # if the coverage of a test has diff, add its path to selected_tests list
+            
             if self.__contains_line(cover_object, diff_report):
                 selected_tests.append(cover_object.file_path)
 
@@ -146,12 +149,13 @@ class Georeum:
             open(os.path.join(self.cache_directory, "coverage.bin"), 'rb'))
 
         # 3. traverse self.selected and update Coverage
-
         for test_file in self.selected:
             is_unittest = False if unittest_formatter(test_file, self.root_directory)[-1] == "." else True
-            if not is_unittest:
+            if True or not is_unittest:
                 covered = Cover.get_coverage(
-                    args=['pytest', test_file], root_path=self.root_directory, module_use=True)
+                    args=['pytest', '-rf',test_file], root_path=self.root_directory, module_use=True)
+                
+                
             else:
                 covered = Cover.get_coverage(
                     args=['unittest', unittest_formatter(test_file, self.root_directory)], root_path=self.root_directory, module_use=True)
@@ -161,15 +165,6 @@ class Georeum:
                     updated.append(i)
             coverd_object_list.append(CoverObject(test_file, covered))
             ran.append(test_file)
-
-        # for test_file in self.selected:
-        #     covered = Cover.get_coverage(
-        #         args=['pytest', test_file], root_path=self.root_directory, module_use=True)
-        #     for i, co in enumerate(coverd_object_list):
-        #         if co.get_file_path() == test_file:
-        #             updated.append(i)
-        #     coverd_object_list.append(CoverObject(test_file, covered))
-        #     ran.append(test_file)
 
         # 4. old CoverObject remove
         for i in sorted(updated, reverse=True):

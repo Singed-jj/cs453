@@ -76,9 +76,8 @@ class Cover:
                 for fr, analysis in report:
                     # report : [(file1, [line1, line2, ...]), (), ...]
                     fn = fr.filename
-                    if regular_path not in fn:
-                        continue
-
+                    # if regular_path not in fn:
+                    #     continue
                     if os.path.splitext(fn)[-1] != ".py":
                         continue
 

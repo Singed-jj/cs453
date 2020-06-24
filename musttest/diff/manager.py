@@ -13,6 +13,7 @@ class Manager:
         :param rel_cache_path: Relative path of cache files. (default = ./.cache)
         """
         self.dir_path = dir_path
+        # self.dir_path = "/Users/fovjfozk/.pyenv/versions/3.7.1/envs/pytorch/lib/python3.7/site-packages/Flask-2.0.0.dev0-py3.7.egg/flask/"
         self.cache_path = os.path.join(dir_path, rel_cache_path)
 
     def analyze(self) -> DiffReport:
@@ -39,8 +40,10 @@ class Manager:
             if os.path.isfile(filename) and os.path.splitext(filename)[-1] == ".py":
                 with open(filename, 'r', encoding="UTF8") as file:
                     rel_path = os.path.relpath(filename, self.dir_path)
-                    hashcashdic[rel_path] = hashcash.hashcash(file.readlines())
-
+                    try:
+                        hashcashdic[rel_path] = hashcash.hashcash(file.readlines())
+                    except:
+                        continue
         # dict: key = file directory (relative), value = hashcash list
         # What if cache file does not exists?
         prev_cache = pickle.load(
